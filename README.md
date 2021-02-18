@@ -4,11 +4,134 @@ Summary
 
 <h2>User Stories</h2>
 <ul>
+  <li><a href="#7298">Add Production Photo Icon</a></li>
   <li><a href="#6612">Rotate Production Photos</a></li>
   <li><a href="#2">XXX</a></li>
   <li><a href="#3">XXX</a></li>
   <li><a href="#4">XXX</a></li>
 </ul>
+
+<h3 id="7298">Add Production Photo Icon</h3>
+<h4>Description</h4>
+<p>We want to easily add production photos to productions in the ProductionPhotos index page.  To accomplish this, we want to display all productions on that page (not just productions with associated photos like it is now.  If there is a Production with no ProductionPhotos, that section will not appear on the ProductionPhotos Index page). Then we want to have a plus sign icon (using font awesome) associated with it, that will link to the ProductionPhotos/Create/[id] page for that particular production. When hovered over, that icon should display a message saying "Click to add a photo to this production".</p>
+<p>The Productions with ProductionPhotos should also have the icon.  If there are no associated photos, put it to the right of the title.  The icon should display to the right of the last picture for each production if the Production does have photos.</p>
+
+<h4>Implementation</h4>
+<p>Change ProductionPhotosController to pass all Productions (including ProductionPhotos) instead of just the ProductionPhotos.
+Edit index.cshtml to reflect the change in controller. Now the page displays Productions for which there are no photos.</p>
+<p>Add 'Add Production Photo'-button to each photo in the view. </p>
+<p>Edit the JQuery search function so that the 'Add Production Photo' button is displayed with the last photo only and if there are no photos, then the plus icon is displayed with the productions title.</p>
+
+<h4>Code</h4>
+<pre><code>
+    public class ProductionPhotosController : Controller
+    {
+        private ApplicationDbContext db = new ApplicationDbContext();
+
+        // GET: ProductionPhotos
+        public ActionResult Index()
+        {
+            var filteredList = db.Productions.OrderByDescending(i =&gt i.Season).ThenBy(i =&gt i.OpeningDay).Select(i =&gt new SelectListItem
+            {
+                Value = i.ProductionId.ToString(),
+                Text = i.Title + " (" + i.Season + ")"
+            });
+            ViewData["ProductionList"] = new SelectList(filteredList, "Value", "Text");
+
+            return View(db.Productions.Include(i =&gt i.ProductionPhotos).OrderByDescending(i =&gt i.Season).ThenBy(i =&gt i.OpeningDay).ToList());
+        }
+</code></pre>
+<pre><code>
+&ltdiv class="prodphoto-content my-3 container"&gt
+    @*sort by production season in descending order , then by opening day in ascending order*@
+    @foreach (var production in Model)
+    {
+    &ltdiv id="@production.ProductionId-prodphoto-show" class="prodphoto-cards"&gt
+        &lth3 class="prodphoto-prod-title text-center my-3"&gt
+            @production.Title &ltspan class="badge badge-pill badge-light"&gt@production.Season&lt/span&gt
+            @*This link will be hidden if there are production photos to be shown*@
+            &lta href="@Url.Action("Create" , new { id = production.ProductionId })" class="fa-stack fa-1x createNewIcon production-plus-icon" data-toggle="tooltip" data-placement="bottom" title="Click to add a photo to this production"&gt
+                &lti class="fa fa-circle fa-stack-1x productionPhotoCreateNewIconBackground fa-inverse"&gt&lt/i&gt
+                &lti class="fa fa-plus-circle fa-stack-1x productionPhotoCreateNewIconForground"&gt&lt/i&gt
+            &lt/a&gt
+        &lt/h3&gt
+
+        @if (production.ProductionPhotos.Count == 0)
+        {
+            &lth4 class="text-center py-3"&gt"This production does not have any photos yet."&lt/h4&gt
+        }
+        else
+        {
+            &ltdiv class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4 justify-content-center"&gt
+                @foreach (var photo in production.ProductionPhotos)
+                {
+                    &ltdiv class="col mb-4 card-and-plus-container"&gt
+                        &ltdiv class="row h-100"&gt
+                            &ltdiv class="col col-10 pr-0"&gt
+                                &ltdiv class="card h-100"&gt
+                                    &ltimg class="card-img-top" src="@Url.Action("DisplayPhoto", "Photo", new { id = photo.PhotoId })" alt="Production Photo"&gt
+                                    &ltdiv class="card-body"&gt
+                                        &lth5 class="card-title"&gt@Html.DisplayFor(modelItem =&gt production.Title)&lt/h5&gt
+                                        &ltp class="card-text text-secondary"&gt@TextHelper.LimitCharacterCount(photo.Description, 50, true)&lt/p&gt
+                                    &lt/div&gt
+                                    &ltdiv class="card-footer"&gt
+                                        @Html.ActionLink("Edit", "Edit", new { id = photo.ProPhotoId }, new { @class = "badge badge-pill badge-danger" }) |
+                                        @Html.ActionLink("Details", "Details", new { id = photo.ProPhotoId }, new { @class = "badge badge-pill badge-danger" }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = photo.ProPhotoId }, new { @class = "badge badge-pill badge-danger" })
+                                    &lt/div&gt
+                                &lt/div&gt
+                            &lt/div&gt
+                            &ltdiv class="col col-2"&gt
+                                @*This plus container will be hidden unless it is the last photo to show*@
+                                &ltdiv class="plus-container"&gt
+                                    &lta href="@Url.Action("Create" , new { id = production.ProductionId })" class="fa-stack fa-1x createNewIcon" data-toggle="tooltip" data-placement="bottom" title="Click to add a photo to this production"&gt
+                                        &lti class="fa fa-circle fa-stack-1x productionPhotoCreateNewIconBackground fa-inverse"&gt&lt/i&gt
+                                        &lti class="fa fa-plus-circle fa-stack-1x productionPhotoCreateNewIconForground"&gt&lt/i&gt
+                                    &lt/a&gt
+                                &lt/div&gt
+                            &lt/div&gt
+                        &lt/div&gt
+                    &lt/div&gt
+                }
+            &lt/div&gt
+        }
+        &ltbr /&gt&ltbr /&gt
+    &lt/div&gt
+    }
+&lt/div&gt
+</code></pre>
+<pre><code>
+//search through card-body-s for user-input and display only those cards and production titles
+    function searchF() {
+        var value = $(".prodphoto-searchbar").val().toLowerCase();
+        $(".prodphoto-cards").hide();
+
+        $(".prodphoto-cards").each(function () {
+            $(this).find(".production-plus-icon").show()//show plus icon of production, it will be hidden if there is a photo to show
+            $(".card-and-plus-container", this).each(function () {
+                var status = $(this).find(".card-body").text().toLowerCase().indexOf(value) &gt -1;
+                $(this).toggle(status);
+                if (status) {
+                    $(this).parents(".prodphoto-cards").find(".plus-container").hide(); //Hide all photo plus-icons of this production
+                    $(this).find(".plus-container").show(); //show plus icon of current (which will eventually be last) photo
+                    $(this).parents(".prodphoto-cards").show(); //displays the production section of the filtered cards
+                    $(this).parents(".prodphoto-cards").find(".production-plus-icon").hide()//hide plus icon of production
+                }
+            });
+        });
+        
+        //If there is no search term, then show all production cards, even if they do not have photos.
+        if (value == "") {
+            $(".prodphoto-cards").show();
+        }
+    };
+</code></pre>
+
+
+
+
+
+
 
 <h3 id="6612">Rotate Production Photos</h3>
 
@@ -83,9 +206,12 @@ ___
 <p></p>
 <p></p>
 <h4>Code</h4>
-<pre>
-</pre>
-<pre>
-</pre>
-<pre>
-</pre>
+<pre><code>
+XXX
+</code></pre>
+<pre><code>
+XXX
+</code></pre>
+<pre><code>
+XXX
+</code></pre>
