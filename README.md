@@ -579,17 +579,6 @@ Summary
 
 </code></pre>
 
-<pre><code>
-XXX
-</code></pre>
-
-<pre><code>
-XXX
-</code></pre>
-
-
-
-
 <h3 id="7646">Subscribe</h3>
 <h4>Description</h4>
 <p>Create a View in the Home folder called 'Subscribe'.  This page should have a form that allows the User to choose a Subscription plan.  There are 3 subscription plans to choose from, check the SubscriptionPlan model and database.  On the Subscribe page, display the 3 subscription plans.  If the User is not logged in, provide form fields for the User to enter in their Username, First Name, Last Name, etc. (All of the fields on the Register page should be here).</p>
