@@ -7,6 +7,7 @@ Summary
   <li><a href="#7646">Subscribe</a></li>
   <li><a href="#7298">Add Production Photo Icon</a></li>
   <li><a href="#6612">Rotate Production Photos</a></li>
+  <li><a href="#6598">Admin Navigation Panel</a></li>
   <li><a href="#7858">Unique Subscription Plan</a></li>
   <li><a href="#3">XXX</a></li>
   <li><a href="#4">XXX</a></li>
@@ -357,6 +358,82 @@ ___
                 }
 
 </code></pre>
+
+
+<h3 id="6598">Admin Navigation Panel</h3>
+<h4>Description</h4>
+<p>Create the following: We want to allow the Admin the ability to easily see and go to every page on the project.  Create a button on the bottom-right of the page, above the Bug Report button.  The text for that button should read "All Pages" and should have a Font Awesome chevron icon as well.  When the button is clicked, a region should appear that contains all available pages on the site. Notice that the Delete, Details and Edit pages are not being displayed.  Exclude the pages that require an id to display.  Clicking on the text "Productions" should take the Admin to the Productions Index page.  The Admin should be able to close this menu by clicking the right chevron in the bottom-right or clicking outside of the menu.  List the pages in the Production, ProductionPhotos and Photos areas of the project.</p>
+<h4>Implementation</h4>
+<p>Create partial view for Admin Navigation Panel with bootstrap cards.</p>
+<p>Create JQuery to hide and show Admin Navigation Panel when buttons are clicked or when the area outside the panel is clicked.</p>
+<h4>Code</h4>
+<pre><code>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    {
+        <script>
+
+            /* function to make the navbar disappear when right chevron is clicked */
+            function disappear_admin_navbar() {
+
+                document.getElementById("admin_navbar_button").style.display = 'block';
+                $("#admin_navbar_container").animate({ right: -350 }, "slow");
+            }
+
+            /*this function brings back the nav bar when the button is clicked.*/
+            function appear_admin_navbar() {
+
+                document.getElementById("admin_navbar_button").style.display = 'none';
+                $("#admin_navbar_container").animate({right: 0}, "slow");
+            }
+
+            /* Hide the admin navbar when user clicks outside of it, only if it is not already hidden (if the button IS hidden). */
+            $(document).on('click', function (e) {
+                if ($(e.target).closest(".admin_navbar").length === 0) {
+                    if (window.getComputedStyle(document.getElementById("admin_navbar_button")).display === "none") {
+                        $("#admin_navbar_container").animate({ right: -350 }, "slow");
+                        $("#admin_navbar_button").show();
+                    }
+                }
+            });
+
+        </script>
+
+        <div class="admin_navbar_button admin_navbar" id="admin_navbar_button">
+            <a class="" onclick="appear_admin_navbar()"><span class="vertical_text">All Pages <i class="fas fa-chevron-right"></i></span> </a>
+        </div>
+
+        <div class="admin_navbar_container admin_navbar" id="admin_navbar_container">
+            <div class="admin_navbar_menu">
+                <ul class="admin_navbar_main_menu card-columns">
+                    <li class="card">
+                        <p>@Html.ActionLink("Productions", "Index", "Productions")</p>
+                        <ul class="admin_navbar_sub_menu">
+                            <li>@Html.ActionLink("Create", "Create", "Productions")</li>
+                            <li>@Html.ActionLink("Current", "Current", "Productions")</li>
+                        </ul>
+                    </li>
+                    <li class="card">
+                        <p>@Html.ActionLink("Production Photos", "Index", "ProductionPhotos")</p>
+                        <ul class="admin_navbar_sub_menu">
+                            <li>@Html.ActionLink("Create", "Create", "ProductionPhotos")</li>
+                        </ul>
+                    </li>
+                    <li class="card">
+                        <p>@Html.ActionLink("Photos", "Index", "Photo")</p>
+                        <ul class="admin_navbar_sub_menu">
+                            <li>@Html.ActionLink("Create", "Create", "Photo")</li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="row justify-content-end mr-1">
+                    <a onclick="disappear_admin_navbar()"><i class="fas fa-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    }
+
+</code></pre>
+
 
 <h3 id="7858">Unique Subscription Plan</h3>
 <h4>Description</h4>
