@@ -4,6 +4,7 @@ Summary
 
 <h2>User Stories</h2>
 <ul>
+  <li><a href="#7151">Asynchrounous Edit Button</a></li>
   <li><a href="#7646">Subscribe</a></li>
   <li><a href="#7298">Add Production Photo Icon</a></li>
   <li><a href="#6612">Rotate Production Photos</a></li>
@@ -12,6 +13,348 @@ Summary
   <li><a href="#3">XXX</a></li>
   <li><a href="#4">XXX</a></li>
 </ul>
+
+<h3 id="7151">Asynchrounous Edit Button</h3>
+<h4>Description</h4>
+<p>Create a button at the end of each table row for each Production.  This button should be a font awesome edit icon.  When clicked, the information associated with the edit button should become editable.  Also, the edit button should disappear and two more buttons should appear: a checkmark button and an 'X' button.  If the admin clicks the checkmark, the information that was edited in that field should be saved to the database asynchronously (the page should not refresh; Ajax may be needed).  If the 'X' is clicked, the information doesn't change.  For example, if the edit button at the end of the Matinee Time row is clicked, the matinee time should be editable and a green checkmark button and red 'X' button should replace the edit button.</p>
+<h4>Implementation</h4>
+<p>Html: Add edit button. Create Ajax forms outside table to avoid interference from table. Add hidden input fields and submit and cancel buttons. </p>
+<p>Javascript: Write script to appropriately show and hide edit fields and buttons. Write script to correctly handle result of Ajax call, hide elements and display message.</p>
+<p>Controller: Write POST method that validates changes, updates the database and returns the apporpriate JSON message.</p>
+<h4>Code</h4>
+<pre><code>
+
+                @{String FormOpeningDay = item.ProductionId + "-OpeningDayForm";}
+                @{String FieldOpeningDayMessage = item.ProductionId + "-OpeningDayMessage";}
+                @{String FieldOpeningDay = item.ProductionId + "-OpeningDayField";}
+                @{String EditButtonOpeningDay = item.ProductionId + "-OpeningDayEditBtn";}
+                @{String CheckButtonOpeningDay = item.ProductionId + "-OpeningDayCheckBtn";}
+                @{String CloseButtonOpeningDay = item.ProductionId + "-OpeningDayCloseBtn";}
+                @{String ValueOpeningDay = item.ProductionId + "-OpeningDayValue";}
+                
+                @{String FormClosingDay = item.ProductionId + "-ClosingDayForm";}
+                @{String FieldClosingDayMessage = item.ProductionId + "-ClosingDayMessage";}
+                @{String FieldClosingDay = item.ProductionId + "-ClosingDayField";}
+                @{String EditButtonClosingDay = item.ProductionId + "-ClosingDayEditBtn";}
+                @{String CheckButtonClosingDay = item.ProductionId + "-ClosingDayCheckBtn";}
+                @{String CloseButtonClosingDay = item.ProductionId + "-CloseingDayCloseBtn";}
+                @{String ValueClosingDay = item.ProductionId + "-CloseingDayValue";}
+
+                @{String FormShowtimeMat = item.ProductionId + "-ShowtimeMatForm";}
+                @{String FieldShowtimeMatMessage = item.ProductionId + "-ShowtimeMatMessage";}
+                @{String FieldShowtimeMat = item.ProductionId + "-ShowtimeMatField";}
+                @{String EditButtonShowtimeMat = item.ProductionId + "-ShowtimeMatEditBtn";}
+                @{String CheckButtonShowtimeMat = item.ProductionId + "-ShowtimeMatCheckBtn";}
+                @{String CloseButtonShowtimeMat = item.ProductionId + "-ShowtimeMatCloseBtn";}
+                @{String ValueShowtimeMat = item.ProductionId + "-ShowtimeMatValue";}
+
+                @{String FormShowtimeEve = item.ProductionId + "-ShowtimeEveForm";}
+                @{String FieldShowtimeEveMessage = item.ProductionId + "-ShowtimeEveMessage";}
+                @{String FieldShowtimeEve = item.ProductionId + "-ShowtimeEveField";}
+                @{String EditButtonShowtimeEve = item.ProductionId + "-ShowtimeEveEditBtn";}
+                @{String CheckButtonShowtimeEve = item.ProductionId + "-ShowtimeEveCheckBtn";}
+                @{String CloseButtonShowtimeEve = item.ProductionId + "-ShowtimeEveCloseBtn";}
+                @{String ValueShowtimeEve = item.ProductionId + "-ShowtimeEveValue";}
+
+
+                @if (User.IsInRole("Admin"))
+                {
+                    using (Ajax.BeginForm("PartialEdit", "Productions", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "success", OnFailure = "success" }, new { @id = @FormOpeningDay })) { @Html.AntiForgeryToken() }
+                    using (Ajax.BeginForm("PartialEdit", "Productions", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "success" }, new { @id = @FormClosingDay })) { @Html.AntiForgeryToken() }
+                    using (Ajax.BeginForm("PartialEdit", "Productions", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "success" }, new { @id = @FormShowtimeMat })) { @Html.AntiForgeryToken() }
+                    using (Ajax.BeginForm("PartialEdit", "Productions", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "success" }, new { @id = @FormShowtimeEve })) { @Html.AntiForgeryToken() }
+                }
+
+                <table class="w-100">
+                    <tr class="production-index-tr-styling">
+                        <th class="productions-index-th-styling">
+                            @Html.DisplayNameFor(model => model.OpeningDay)
+                        </th>
+                        <td class="productions-index-td-styling">
+                            <span id="@ValueOpeningDay">@item.OpeningDay.ToShortDateString()<br /></span>
+                            @Html.EditorFor(model => item.OpeningDay, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "OpeningDay", @form = @FormOpeningDay, @id = @FieldOpeningDay } })
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <span id="@FieldOpeningDayMessage"></span>
+
+                                @*Fields necessary for controller to work*@
+                                <input type="hidden" form="@FormOpeningDay" id="propertyName" name="PropertyName" value="OpeningDay">
+                                <input type="hidden" form="@FormOpeningDay" id="ProductionId" name="ProductionId" value="@item.ProductionId">
+
+                                @*Fields necessary for the Success and Failure functions to work.*@
+                                <input type="hidden" form="@FormOpeningDay" id="ProductionId" name="MessageField" value="@FieldOpeningDayMessage">
+                                <input type="hidden" form="@FormOpeningDay" id="InputField" name="InputField" value="@FieldOpeningDay">
+                                <input type="hidden" form="@FormOpeningDay" id="EditButton" name="EditButton" value="@EditButtonOpeningDay">
+                                <input type="hidden" form="@FormOpeningDay" id="CheckButton" name="CheckButton" value="@CheckButtonOpeningDay">
+                                <input type="hidden" form="@FormOpeningDay" id="CloseButton" name="CloseButton" value="@CloseButtonOpeningDay">
+                                <input type="hidden" form="@FormOpeningDay" id="ValueSpan" name="ValueSpan" value="@ValueOpeningDay">
+                            }
+
+                        </td>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td class="productions-index-td-styling">
+                                <button type="button" class="edit-btn-set" id="@EditButtonOpeningDay" onclick="show_edit_functions('@FieldOpeningDay', '@CheckButtonOpeningDay', '@CloseButtonOpeningDay', '@EditButtonOpeningDay', '@FieldOpeningDayMessage', '@ValueOpeningDay')"><i class="far fa-edit"></i></button>
+                                <button type="submit" form="@FormOpeningDay" class="edit-btn-set edit-functionality" id="@CheckButtonOpeningDay"><i class="far fa-check-square"></i></button>
+                                <button type="button" class="edit-btn-set edit-functionality" id="@CloseButtonOpeningDay" onclick="hide_edit_functions('@FieldOpeningDay', '@CheckButtonOpeningDay', '@CloseButtonOpeningDay', '@EditButtonOpeningDay', '@FieldOpeningDayMessage', '@ValueOpeningDay')"><i class="far fa-window-close"></i></button>
+                            </td>
+
+                        }
+
+
+                    </tr>
+                    <tr class="production-index-tr-styling">
+                        <th class="productions-index-th-styling">
+                            @Html.DisplayNameFor(model => model.ClosingDay)
+                        </th>
+                        <td class="productions-index-td-styling">
+                            <span id="@ValueClosingDay">@item.ClosingDay.ToShortDateString()<br /></span>
+                            @Html.EditorFor(model => item.ClosingDay, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "ClosingDay", @form = @FormClosingDay, @id = @FieldClosingDay } })
+                            @if (User.IsInRole("Admin"))
+                            {
+
+                                <span id="@FieldClosingDayMessage"></span>
+
+                                @*Fields necessary for controller to work*@
+                                <input type="hidden" form="@FormClosingDay" id="propertyName" name="PropertyName" value="ClosingDay">
+                                <input type="hidden" form="@FormClosingDay" id="ProductionId" name="ProductionId" value="@item.ProductionId">
+
+                                @*Fields necessary for the Success and Failure functions to work.*@
+                                <input type="hidden" form="@FormClosingDay" id="ProductionId" name="MessageField" value="@FieldClosingDayMessage">
+                                <input type="hidden" form="@FormClosingDay" id="InputField" name="InputField" value="@FieldClosingDay">
+                                <input type="hidden" form="@FormClosingDay" id="EditButton" name="EditButton" value="@EditButtonClosingDay">
+                                <input type="hidden" form="@FormClosingDay" id="CheckButton" name="CheckButton" value="@CheckButtonClosingDay">
+                                <input type="hidden" form="@FormClosingDay" id="CloseButton" name="CloseButton" value="@CloseButtonClosingDay">
+                                <input type="hidden" form="@FormClosingDay" id="ValueSpan" name="ValueSpan" value="@ValueClosingDay">
+                            }
+                        </td>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <td class="productions-index-td-styling">
+                                <button type="button" class="edit-btn-set" id="@EditButtonClosingDay" onclick="show_edit_functions('@FieldClosingDay', '@CheckButtonClosingDay', '@CloseButtonClosingDay', '@EditButtonClosingDay', '@FieldClosingDayMessage', '@ValueClosingDay')"><i class="far fa-edit"></i></button>
+                                <button type="submit" form="@FormClosingDay" class="edit-btn-set edit-functionality" id="@CheckButtonClosingDay"><i class="far fa-check-square"></i></button>
+                                <button type="button" class="edit-btn-set edit-functionality" id="@CloseButtonClosingDay" onclick="hide_edit_functions('@FieldClosingDay', '@CheckButtonClosingDay', '@CloseButtonClosingDay', '@EditButtonClosingDay', '@FieldClosingDayMessage', '@ValueClosingDay')"><i class="far fa-window-close"></i></button>
+                            </td>
+                        }
+
+                    </tr>
+
+                    @if (item.ShowtimeMat.HasValue || User.IsInRole("Admin"))
+                    {
+                        <tr class="production-index-tr-styling">
+                            <th class="productions-index-th-styling">
+                                @Html.DisplayNameFor(model => model.ShowtimeMat)
+                            </th>
+                            <td class="productions-index-td-styling">
+                                <span id="@ValueShowtimeMat">@item.ShowtimeMat.GetValueOrDefault().ToShortTimeString()<br /></span>
+                                @Html.EditorFor(model => item.ShowtimeMat, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "ShowtimeMat", @form = @FormShowtimeMat, @id = @FieldShowtimeMat } })
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <span id="@FieldShowtimeMatMessage"></span>
+
+                                    @*Fields necessary for controller to work*@
+                                    <input type="hidden" form="@FormShowtimeMat" id="propertyName" name="PropertyName" value="ShowtimeMat">
+                                    <input type="hidden" form="@FormShowtimeMat" id="ProductionId" name="ProductionId" value="@item.ProductionId">
+
+                                    @*Fields necessary for the Success and Failure functions to work.*@
+                                    <input type="hidden" form="@FormShowtimeMat" id="ProductionId" name="MessageField" value="@FieldShowtimeMatMessage">
+                                    <input type="hidden" form="@FormShowtimeMat" id="InputField" name="InputField" value="@FieldShowtimeMat">
+                                    <input type="hidden" form="@FormShowtimeMat" id="EditButton" name="EditButton" value="@EditButtonShowtimeMat">
+                                    <input type="hidden" form="@FormShowtimeMat" id="CheckButton" name="CheckButton" value="@CheckButtonShowtimeMat">
+                                    <input type="hidden" form="@FormShowtimeMat" id="CloseButton" name="CloseButton" value="@CloseButtonShowtimeMat">
+                                    <input type="hidden" form="@FormShowtimeMat" id="ValueSpan" name="ValueSpan" value="@ValueShowtimeMat">
+
+                                }
+                            </td>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td class="productions-index-td-styling">
+                                    <button type="button" class="edit-btn-set" id="@EditButtonShowtimeMat" onclick="show_edit_functions('@FieldShowtimeMat', '@CheckButtonShowtimeMat', '@CloseButtonShowtimeMat', '@EditButtonShowtimeMat', '@FieldShowtimeMatMessage', '@ValueShowtimeMat')"><i class="far fa-edit"></i></button>
+                                    <button type="submit" form="@FormShowtimeMat" class="edit-btn-set edit-functionality" id="@CheckButtonShowtimeMat"><i class="far fa-check-square"></i></button>
+                                    <button type="button" class="edit-btn-set edit-functionality" id="@CloseButtonShowtimeMat" onclick="hide_edit_functions('@FieldShowtimeMat', '@CheckButtonShowtimeMat', '@CloseButtonShowtimeMat', '@EditButtonShowtimeMat', '@FieldShowtimeMatMessage', '@ValueShowtimeMat')"><i class="far fa-window-close"></i></button>
+                                </td>
+                            }
+                            
+
+                        </tr>
+                    }
+
+                    @if (item.ShowtimeEve.HasValue || User.IsInRole("Admin"))
+                    {
+                        <tr class="production-index-tr-styling">
+                            <th class="productions-index-th-styling">
+                                @Html.DisplayNameFor(model => model.ShowtimeEve)
+                            </th>
+                            <td class="productions-index-td-styling">
+                                <span id="@ValueShowtimeEve">@item.ShowtimeEve.GetValueOrDefault().ToShortTimeString()</span>
+                                @Html.EditorFor(model => item.ShowtimeEve, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "ShowtimeEve", @form = @FormShowtimeEve, @id = @FieldShowtimeEve } })
+
+                                @if (User.IsInRole("Admin"))
+                                {
+                                    <span id="@FieldShowtimeEveMessage"></span>
+
+                                    @*Fields necessary for controller to work*@
+                                    <input type="hidden" form="@FormShowtimeEve" id="propertyName" name="PropertyName" value="ShowtimeEve">
+                                    <input type="hidden" form="@FormShowtimeEve" id="ProductionId" name="ProductionId" value="@item.ProductionId">
+
+                                    @*Fields necessary for the Success and Failure functions to work.*@
+                                    <input type="hidden" form="@FormShowtimeEve" id="ProductionId" name="MessageField" value="@FieldShowtimeEveMessage">
+                                    <input type="hidden" form="@FormShowtimeEve" id="InputField" name="InputField" value="@FieldShowtimeEve">
+                                    <input type="hidden" form="@FormShowtimeEve" id="EditButton" name="EditButton" value="@EditButtonShowtimeEve">
+                                    <input type="hidden" form="@FormShowtimeEve" id="CheckButton" name="CheckButton" value="@CheckButtonShowtimeEve">
+                                    <input type="hidden" form="@FormShowtimeEve" id="CloseButton" name="CloseButton" value="@CloseButtonShowtimeEve">
+                                    <input type="hidden" form="@FormShowtimeEve" id="ValueSpan" name="ValueSpan" value="@ValueShowtimeEve">
+                                }
+
+                            </td>
+
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td class="productions-index-td-styling">
+                                    <button type="button" class="edit-btn-set" id="@EditButtonShowtimeEve" onclick="show_edit_functions('@FieldShowtimeEve', '@CheckButtonShowtimeEve', '@CloseButtonShowtimeEve', '@EditButtonShowtimeEve', '@FieldShowtimeEveMessage', '@ValueShowtimeEve')"><i class="far fa-edit"></i></button>
+                                    <button type="submit" form="@FormShowtimeEve" class="edit-btn-set edit-functionality" id="@CheckButtonShowtimeEve"><i class="far fa-check-square"></i></button>
+                                    <button type="button" class="edit-btn-set edit-functionality" id="@CloseButtonShowtimeEve" onclick="hide_edit_functions('@FieldShowtimeEve', '@CheckButtonShowtimeEve', '@CloseButtonShowtimeEve', '@EditButtonShowtimeEve', '@FieldShowtimeEveMessage', '@ValueShowtimeEve')"><i class="far fa-window-close"></i></button>
+                                </td>
+
+                            }
+                            
+
+                        </tr>
+                    }
+                </table>
+
+</code></pre>
+<pre><code>
+
+        function success(obj) {
+            if (obj["Success"]) {
+                document.getElementById(obj["InputField"]).style.display = "none";
+                document.getElementById(obj["CheckButton"]).style.display = "none";
+                document.getElementById(obj["CloseButton"]).style.display = "none";
+                document.getElementById(obj["EditButton"]).style.display = "inline";
+                document.getElementById(obj["MessageField"]).innerHTML = "";
+                document.getElementById(obj["ValueSpan"]).style.display = "inline";
+                document.getElementById(obj["ValueSpan"]).innerHTML = obj["NewValue"];
+            }
+            else {
+                document.getElementById(obj["MessageField"]).innerHTML = obj["Message"];
+            }
+        }
+        
+        function show_edit_functions(InputField, CheckButton, CloseButton, EditButton, FieldMessage, ValueSpan) {
+            document.getElementById(InputField).style.display = "block";
+            document.getElementById(CheckButton).style.display = "inline";
+            document.getElementById(CloseButton).style.display = "inline";
+            document.getElementById(EditButton).style.display = "none";
+            document.getElementById(FieldMessage).innerHTML = "";
+            document.getElementById(ValueSpan).style.display = "none";
+        }
+
+        function hide_edit_functions(FieldOpeningDay, CheckButtonOpeningDay, CloseButtonOpeningDay, EditButtonOpeningDay, FieldOpeningDayMessage, ValueOpeningDay) {
+            document.getElementById(FieldOpeningDay).style.display = "none";
+            document.getElementById(CheckButtonOpeningDay).style.display = "none";
+            document.getElementById(CloseButtonOpeningDay).style.display = "none";
+            document.getElementById(EditButtonOpeningDay).style.display = "inline-block";
+            document.getElementById(FieldOpeningDayMessage).innerHTML = "";
+            document.getElementById(ValueOpeningDay).style.display = "inline";
+        }
+
+</code></pre>
+<pre><code>
+
+        //POST: Productions/PartialEdit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public JsonResult PartialEdit([Bind(Include = "ProductionId,OpeningDay,ClosingDay,ShowtimeEve, ShowtimeMat")] Production production)
+        {
+            ModelState.Remove("Title");
+            string propertyName = Request.Form["PropertyName"];
+            string ProductionId = Request.Form["ProductionId"];
+            int prodId = Convert.ToInt32(ProductionId);
+            string OpeningDay = Request.Form["OpeningDay"];
+            string ClosingDay = Request.Form["ClosingDay"];
+            string ShowtimeEve = Request.Form["ShowtimeEve"];
+            string ShowtimeMat = Request.Form["ShowtimeMat"];
+
+            //Even though the title is not being modified, it needs to be set otherwise it will cause a validation error. It will not be saved to the database
+            production.Title = "dummy";
+            //Variable for return json
+            String newValue = ""; 
+
+            //Attach the production before setting the property to isModified. Set it after comparing to the original entry in the database or the find method will search in the local version with the same id.
+            if (propertyName == "OpeningDay")
+            {
+                if(OpeningDay == null || OpeningDay == "")
+                {
+                    return Json(new { Success = false, Message = "The opening day cannot be left blank.", MessageField = Request.Form["MessageField"] });
+                }
+                db.Productions.Attach(production);
+                db.Entry(production).Property(x => x.OpeningDay).IsModified = true;
+                //Variable for return json
+                newValue = production.OpeningDay.ToShortDateString();
+            }
+            else if (propertyName == "ClosingDay")
+            {
+                if (ClosingDay == null || ClosingDay == "")
+                {
+                    return Json(new { Success = false, Message = "The closing day cannot be left blank.", MessageField = Request.Form["MessageField"] });
+                }
+                db.Productions.Attach(production);
+                db.Entry(production).Property(x => x.ClosingDay).IsModified = true;
+                //Variable for return json
+                newValue = production.ClosingDay.ToShortDateString();
+            }
+            else if (propertyName == "ShowtimeMat")
+            {
+                //Retrieve only the needed field or it will not be possible to attach production.
+                DateTime? DbShowtimeEve = db.Productions.Where(u => u.ProductionId == prodId).Select(u => u.ShowtimeEve).SingleOrDefault();
+                if ((ShowtimeMat == null || ShowtimeMat == "") && !DbShowtimeEve.HasValue)
+                {
+                    return Json(new { Success = false, Message = "Please provide a evening time before deleting the matinee time.", MessageField = Request.Form["MessageField"] });
+                }
+                db.Productions.Attach(production);
+                db.Entry(production).Property(x => x.ShowtimeMat).IsModified = true;
+                //Variable for return json
+                newValue = production.ShowtimeMat.GetValueOrDefault().ToShortTimeString();
+            }
+            else if (propertyName == "ShowtimeEve")
+            {
+                //Retrieve only the needed field or it will not be possible to attach production.
+                DateTime? DbShowtimeMat = db.Productions.Where(u => u.ProductionId == prodId).Select(u => u.ShowtimeMat).SingleOrDefault();
+                if ((ShowtimeEve == null || ShowtimeEve == "") && !DbShowtimeMat.HasValue)
+                {
+                    return Json(new { Success = false, Message = "Please provide a matinee time before deleting the evening time.", MessageField = Request.Form["MessageField"] });
+                }
+                db.Productions.Attach(production);
+                db.Entry(production).Property(x => x.ShowtimeEve).IsModified = true;
+                //Variable for return json
+                newValue = production.ShowtimeEve.GetValueOrDefault().ToShortTimeString();
+            }
+            db.Entry(production).Property(x => x.Title).IsModified = false;
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.SaveChanges();
+                    return Json(new { Success = true, NewValue = newValue, MessageField = Request.Form["MessageField"], InputField = Request.Form["InputField"], EditButton = Request.Form["EditButton"], CheckButton = Request.Form["CheckButton"], CloseButton = Request.Form["CloseButton"], ValueSpan = Request.Form["ValueSpan"] });
+                }
+                catch { 
+                    return Json(new { Success = false, Message = "There was an error.", MessageField = Request.Form["MessageField"] });
+                }
+            }
+            return Json(new { Success = false, Message = "There was an error", MessageField = Request.Form["MessageField"] });
+        }
+
+
+</code></pre>
+
 
 
 
