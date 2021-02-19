@@ -5,12 +5,12 @@ Summary
 <h2 id="features">Features</h2>
 <ul>
   <li><a href="#7151">Asynchrounous Edit Button</a></li>
+  <li><a href="#7390">Direct Message Fans</a></li>
   <li><a href="#7646">Subscribe</a></li>
   <li><a href="#7298">Add Production Photo Icon</a></li>
   <li><a href="#6612">Rotate Production Photos</a></li>
   <li><a href="#6598">Admin Navigation Panel</a></li>
   <li><a href="#7858">Unique Subscription Plan</a></li>
-  <li><a href="#3">XXX</a></li>
   <li><a href="#4">XXX</a></li>
 </ul>
 
@@ -354,6 +354,237 @@ Summary
         }
 
 
+</code></pre>
+
+
+<h3 id="7390">Direct Message Fans</h3>
+<h4>Description</h4>
+<p>When a current Production has at least one Cast Member that a Subscriber has favorited, we want to give the admin the ability to send all subscribers that have favorited that Cast Member a direct message.</p>
+<p>Create a button before the title of each of the current Productions on the Admin Dashboard.  Make this button a font awesome icon button similar to the buttons on the Part Index page and have the icon be a message icon (similar to the one in the messaging bar).  </p>
+<p>Clicking this button should pull up a modal asking the admin if they want to send all subscribers an email about this Production ("There are Subscribers that have favorited some Cast Members in this Production.  Notify Subscribers about Production?").  The messages sent should go to the Subscriber's MessageGroup that has the Admin in the UserList.  If there is no such MessageGroup, create one.</p>
+<p>The message should let them know about the production.  Something like "Hey [User's name]!  One of the Cast Members that you are following is going to be playing in a new upcoming Production.  Check out [Cast Member's name] in [Production's name] opening on [Production's opening day] at Theatre Vertigo!  Get your tickets now!".  If the Subscriber has multiple favorited Cast Members in the Production, modify the message to let the Subscriber know of all of their favorited Cast Members in that Production.</p>
+<h4>Implementation</h4>
+<p></p>
+<p></p>
+<p></p>
+<h5><a href="#features">Back to Features</a></h5>
+<h4>Code</h4>
+<pre><code>
+
+            <table class="admin-tables mx-3">
+            @{
+                foreach (var prod in ViewData["CurrentProductionList"] as List<TheatreCMS.Models.Production>)
+                {
+                    <tr class="dashboard-subsection">
+                        <td>
+                            <p class="h5">
+                                @{String hascastmemberfan = "hascastmemberfan" + ((bool)ViewData[prod.ProductionId.ToString()]).ToString(); }
+                                <button class="btn comment-btn open-MessaginModal @hascastmemberfan" data-productionid="@prod.ProductionId" data-productiontitle="@prod.Title" data-hascastmemberfan="@hascastmemberfan" data-toggle="modal" data-target="#messagingModal" aria-disabled="true"><i class="fas fa-comment-dots fa-2x"></i></button>
+                                @prod.Title <span class="dashboard-badges small mx-3">
+                                    @Html.ActionLink("Edit", "Edit", "Productions", new { id = prod.ProductionId }, new { @class = "badge badge-pill" }) |
+                                    @Html.ActionLink("Delete", "Delete", "Productions", new { id = prod.ProductionId }, new { @class = "badge badge-pill" })
+                                </span>
+                            </p>
+                            <p class="mx-3"> @prod.OpeningDay.ToString("MM/dd/yy")-@prod.ClosingDay.ToString("MM/dd/yy")</p>
+                        </td>
+                    </tr>
+                }
+            }
+
+        </table>
+</code></pre>
+<pre><code>
+
+    //get production info to modal
+    $(document).on("click", ".open-MessaginModal", function () {
+        var productionId = $(this).data('productionid');
+        var productionTitle = $(this).data('productiontitle');
+        $(".modal-body #productionId").val(productionId);
+        $(".modal-body #productionTitle").text(productionTitle);
+        if ($(this).data('hascastmemberfan') === 'hascastmemberfanFalse') {
+            $(".modal-body #messageModalText").text("There are no Subscribers that have favorited any Cast Members in this Production.");
+            $("#sendMessagesBtn").hide();
+        }
+        else {
+            $(".modal-body #messageModalText").text("There are Subscribers that have favorited some Cast Members in this Production.  Notify Subscribers about Production?");
+            $("#sendMessagesBtn").show();
+        }
+    });
+
+    //AJAX FUNCTIONS
+    //the built in OnSuccess reports success if the controller was reached even if the operation in the controller results in a false.
+    function AjaxSucces(obj) {
+        if (obj["Success"]) {
+            $(".modal-body #messageModalText").text("Messages have been sent.");
+            $("#sendMessagesBtn").hide();
+        }
+        else {
+            $(".modal-body #messageModalText").text("There was an error sending the messages. Please try again.");
+        }
+    }
+    function AjaxFailure() {
+        $(".modal-body #messageModalText").text("On Failure was called. There was an error sending the messages. Please try again.");
+    }
+
+</code></pre>
+<pre><code>
+
+    public class Message
+    {
+        public Message()
+        {
+            Sent = DateTime.Now;
+            Read = false;
+        }
+        public int MessageID { get; set; }
+        public virtual MessageGroup MessageGroup { get; set; }
+        public virtual ApplicationUser Author { get; set; }
+        public string Content { get; set; }
+        public DateTime Sent { get; set; }
+        public bool Read { get; set; }
+    }
+
+</code></pre>
+<pre><code>
+
+    public class MessageGroupUser
+    {
+        public int MessageGroupUserID { get; set; }
+        public int MessageGroupID { get; set; }
+        public String ApplicationUserID { get; set; }
+        public virtual MessageGroup MessageGroup { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+    }
+
+</code></pre>
+
+<pre><code>
+    
+        public class MessageGroup
+    {
+        //using data annotations to change the display name of this property.
+        [Display(Name = "Group Name")]
+        //unique identifier for the group
+        public string GroupName { get; set; }
+        public MessageGroup()
+        {
+            CreatedOn = DateTime.Now;
+        }
+        public int MessageGroupID { get; set; }
+        public virtual ApplicationUser CreatedBy { get; set; }
+        public DateTime CreatedOn { get; set; }
+        public virtual ICollection<Message> Messages { get; set; }
+        public int UserLimit { get; set; }
+        public ICollection<MessageGroupUser> MessageGroupUsers { get; set; }
+    }
+
+</code></pre>
+
+<pre><code>
+
+        //Send messages to all users who have favorited a castmember in the production.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
+        public JsonResult sendMessages()
+        {
+            int productionId = Convert.ToInt32(Request.Form["productionId"]);
+            Production production = db.Productions.Find(productionId);
+            //Generate a dictionay with Users as Keys and List of Parts/Castmembers that they favorited as Values
+            Dictionary<ApplicationUser, List<Part>> usersToMessage = new Dictionary<ApplicationUser, List<Part>>();
+            foreach (Part part in production.Parts)
+            {
+                String searchString = part.Person.CastMemberID.ToString();
+                //A simple query wityh only .Contains(searchString) will return users where the searchstring is only part of the id of the castmember that was favorited.
+                List<ApplicationUser> fansOfCastMember = db.Users.Where(u => u.FavoriteCastMembers == searchString || u.FavoriteCastMembers.StartsWith(searchString + ",") || u.FavoriteCastMembers.EndsWith("," + searchString) || u.FavoriteCastMembers.Contains("," + searchString + ",")).ToList();
+                foreach (ApplicationUser fanOfCastMember in fansOfCastMember)
+                {
+                     if (!usersToMessage.ContainsKey(fanOfCastMember)) {
+                        usersToMessage[fanOfCastMember] = new List<Part> { part };
+                    }
+                     else
+                    {
+                        usersToMessage[fanOfCastMember].Add(part);
+                    }
+                }
+            }
+
+            //Create messages to all Users in the above generated list.
+            string userId = User.Identity.GetUserId();
+            ApplicationUser admin = db.Users.Find(userId);
+            foreach (KeyValuePair<ApplicationUser, List<Part>> entry in usersToMessage)
+            {
+                MessageGroup messageGroup = null;
+                //Find if a messageGroup exists with ONLY the userToMessage and the admin.
+                //First Find all entries in 
+                foreach (MessageGroupUser messageGroupUser in entry.Key.MessageGroupUsers)
+                {
+                    if( messageGroupUser.MessageGroup.MessageGroupUsers.Count <=2 && messageGroupUser.MessageGroup.MessageGroupUsers.Count <= 2)
+                    {
+                        messageGroup = messageGroupUser.MessageGroup;
+                    }
+                }
+
+
+                
+                //If no existingMessageGroup was found with only the Admin and the userToMessage, Create new MessageGroup.
+                if (messageGroup == null)
+                {
+                    messageGroup = new MessageGroup();
+                    messageGroup.CreatedBy = admin;
+                    MessageGroupUser mgu1 = new MessageGroupUser();
+                    mgu1.ApplicationUser = admin;
+                    mgu1.MessageGroup = messageGroup;
+                    MessageGroupUser mgu2 = new MessageGroupUser();
+                    mgu2.ApplicationUser = entry.Key;
+                    mgu2.MessageGroup = messageGroup;
+                }
+                //Build Message Content
+                String One_Some = "";
+                String is_are = "";
+                if (entry.Value.Count() == 1)
+                {
+                    One_Some = "One";
+                    is_are = "is";
+                }
+                else
+                {
+                    One_Some = "Some";
+                    is_are = "are";
+                }
+                string castMembers = "";
+                int counter = 0;
+                foreach (Part part in entry.Value)
+                {
+                    if (counter == 0) castMembers += part.Person.Name;
+                    else if (counter == entry.Value.Count() - 1) castMembers += " and " + part.Person.Name;
+                    else castMembers += ", " + part.Person.Name;
+                    counter++;
+                }
+                String messageContent = $"Hey {entry.Key.FirstName}!  {One_Some} of the Cast Members that you are following {is_are} going to be playing in a new upcoming Production.";
+                messageContent += $"  Check out {castMembers} in {production.Title} opening on {production.OpeningDay.ToShortDateString()} at Theatre Vertigo!  Get your tickets now!";
+                //Create new Message
+                Message message = new Message();
+                message.MessageGroup = messageGroup;
+                message.Author = admin;
+                message.Content = messageContent;
+
+                db.MessageGroup.Add(messageGroup);
+                db.Message.Add(message);
+            }
+            db.SaveChanges();
+
+            return Json(new { Success = true });
+        }
+
+</code></pre>
+
+<pre><code>
+XXX
+</code></pre>
+
+<pre><code>
+XXX
 </code></pre>
 
 
