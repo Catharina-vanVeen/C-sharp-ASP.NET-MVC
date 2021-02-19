@@ -4,12 +4,174 @@ Summary
 
 <h2>User Stories</h2>
 <ul>
+  <li><a href="#7646">Subscribe</a></li>
   <li><a href="#7298">Add Production Photo Icon</a></li>
   <li><a href="#6612">Rotate Production Photos</a></li>
   <li><a href="#2">XXX</a></li>
   <li><a href="#3">XXX</a></li>
   <li><a href="#4">XXX</a></li>
 </ul>
+
+
+
+<h3 id="7646">Subscribe</h3>
+<h4>Description</h4>
+<p>Create a View in the Home folder called 'Subscribe'.  This page should have a form that allows the User to choose a Subscription plan.  There are 3 subscription plans to choose from, check the SubscriptionPlan model and database.  On the Subscribe page, display the 3 subscription plans.  If the User is not logged in, provide form fields for the User to enter in their Username, First Name, Last Name, etc. (All of the fields on the Register page should be here).</p>
+<p>When the User is not logged in or is logged in with the role of "User", have a button in the nav bar appear with the text "Subscribe!" that takes the User to this page.  This button should not appear for Members, Admins, or any other UserRole in the future that is added.</p>
+<p>When the form is submitted and the User was not signed in, the ApplicationUser and Subscriber objects should be created and stored in the database.  If the User was logged in and had a role of 'User', create a new Subscriber object for the User and be sure to change the role of the User to 'Subscriber'.  In both cases, the Subscriber object should have the SubscriptionPlan that was selected.</p>
+<h4>Implementation</h4>
+<p>When user is not logged in he is redirected to login or register page with a return URL to the subscribe page as to not duplicate the login/register code.</p>
+<p>Create subscribe view</p>
+<p>Create subscribe GET and POST methods. The POST method needs to update the UserRole linking table and the user table, since the role is currently logged in two distinct ways. (Submitted a improvement suggestion for this) The POST method needs to add teh subscriber to the subscriber table. Then the method needs to automatically log the user in again after saving to the database to update the login information and display the appropriate content for a subscriber. </p>
+<p>Update register method and view to allow for return url. Add extra parameter (return url) to register POST and GET methods. Modify the method to redirect to return url. Update Register view to pass return url to the controller.</p>
+<h4>Code</h4>
+<pre><code>
+     @model TheatreCMS.Areas.Subscribers.Models.Subscriber
+
+
+    @{
+        ViewBag.Title = "Subscribe";
+    }
+
+    <br/>
+    <h2>Subscribe</h2>
+
+    @if (User == null || !User.Identity.IsAuthenticated)
+    {
+
+        <p class="text-center">We offer the following subscription plans:</p>
+
+        foreach (var plan in ViewBag.SubscriptionPlans)
+        {
+            <div class="subscriptionbox">
+                <label class="subscriptionboxheader">@plan.SubscriptionLevel: </label>
+                <p>@plan.NumberOfShows tickets for $@plan.PricePerYear per year </p>
+            </div>
+        }
+
+        <p class="text-center">In order to sign up for our subscription plans, please @Html.ActionLink("Register", "Register", new { area = "", controller = "Account", returnUrl = "/Home/Subscribe" }) or @Html.ActionLink("Log in", "Login", new { area = "", controller = "Account", returnUrl = "/Home/Subscribe" })</p>
+
+        <div class="center">
+            @Html.ActionLink("Register", "Register", new { area = "", controller = "Account", returnUrl = "/Home/Subscribe" }, htmlAttributes: new { @class = "btn btn-main registerButton w-25 mb-5", @role = "button" })
+            @Html.ActionLink("Login", "Login", new { area = "", controller = "Account", returnUrl = "/Home/Subscribe" }, htmlAttributes: new { @class = "btn btn-main registerButton w-25 mb-5", @role = "button" })
+        </div>
+
+      }
+
+    else if (User.Identity.IsAuthenticated && User.IsInRole("Subscriber"))
+    {
+        < p > You are already registered as a subscriber </ p >
+    }
+
+    else if (User.Identity.IsAuthenticated && User.IsInRole("User"))
+    {
+
+        using (Html.BeginForm("SubscribeAsync", "Home", null, FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal ">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <p class="text-center">Please select one of the following subscription plans:</p>
+                <div class="form-group">
+
+                    @foreach (var plan in ViewBag.SubscriptionPlans)
+                    {
+                        string subscriptionPlanID = plan.SubscriptionPlanId.ToString();
+                        <div class="subscriptionbox">
+                            <label class="subscriptionboxheader">
+                                <input type="radio" name="SubscriptionPlanId" value=@subscriptionPlanID> @plan.SubscriptionLevel:
+                            </label>
+                            <p>@plan.NumberOfShows tickets for $@plan.PricePerYear per year </p>
+                        </div>
+                    }
+
+                </div>
+
+                <div class="form-group text-center">
+                    <div>
+                        @Html.LabelFor(model => model.Newsletter, htmlAttributes: new { @class = "control-label" })
+                        <div class="checkbox text-center">
+                            @Html.EditorFor(model => model.Newsletter)
+                            @Html.ValidationMessageFor(model => model.Newsletter, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="center">
+                        <button type="submit" class="btn btn-main registerButton w-25 mb-5" value="Subscribe">Subscribe</button>
+                    </div>
+                </div>
+
+            </div>
+        }
+    }
+
+
+
+    @section Scripts
+    {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+
+
+
+</code></pre>
+<pre><code>
+        public ActionResult Subscribe()
+        {
+
+            ViewBag.SubscriptionPlans = db.SubscriptionPlan.OrderByDescending(p =&gt p.NumberOfShows ).ToList();
+
+            return View();
+        }
+
+
+        // POST: Subscribe
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async System.Threading.Tasks.Task&ltActionResult&gt SubscribeAsync([Bind(Include = "Newsletter")] Subscriber subscriber)
+        {
+            string userId = User.Identity.GetUserId();
+            subscriber.SubscriberId = userId;
+            int plan = Convert.ToInt32(Request.Form["SubscriptionPlan"]);
+            subscriber.SubscriptionPlan = db.SubscriptionPlan.Find(plan);
+            ModelState.Remove("SubscriberPerson");
+            subscriber.SubscriberPerson = db.Users.Find(userId);
+            subscriber.CurrentSubscriber = true;
+
+            if (ModelState.IsValid)
+            {
+                var userManager = new UserManager&ltApplicationUser&gt(new UserStore&ltApplicationUser&gt(db));
+
+                //UserRoles Table: get all user's roles, and remove them, then add new role of subscriber
+                var roles = await userManager.GetRolesAsync(userId);
+                await userManager.RemoveFromRolesAsync(userId, roles.ToArray());
+                await userManager.AddToRoleAsync(userId, "Subscriber");
+
+                // get user from Users table and update role
+                var user = (ApplicationUser)userManager.FindById(userId);
+                user.Role = "Subscriber";
+                userManager.Update(user);
+
+                db.Subscribers.Add(subscriber);
+                db.SaveChanges();
+
+                //log the user in again to update role in login session
+                var identity = await userManager.CreateIdentityAsync(user, DefaultAuthenticationTypes.ApplicationCookie);
+                HttpContext.GetOwinContext().Authentication.SignIn(new AuthenticationProperties { IsPersistent = true }, identity);
+
+                return RedirectToAction("Index");
+            }
+            ViewBag.SubscriptionPlans = db.SubscriptionPlan.OrderByDescending(p =&gt p.NumberOfShows ).ToList();
+            return View("Subscribe");
+        }
+
+</code></pre>
+
 
 <h3 id="7298">Add Production Photo Icon</h3>
 <h4>Description</h4>
@@ -31,14 +193,14 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
         // GET: ProductionPhotos
         public ActionResult Index()
         {
-            var filteredList = db.Productions.OrderByDescending(i =&gt i.Season).ThenBy(i =&gt i.OpeningDay).Select(i =&gt new SelectListItem
+            var filteredList = db.Productions.OrderByDescending(i => i.Season).ThenBy(i => i.OpeningDay).Select(i => new SelectListItem
             {
                 Value = i.ProductionId.ToString(),
                 Text = i.Title + " (" + i.Season + ")"
             });
             ViewData["ProductionList"] = new SelectList(filteredList, "Value", "Text");
 
-            return View(db.Productions.Include(i =&gt i.ProductionPhotos).OrderByDescending(i =&gt i.Season).ThenBy(i =&gt i.OpeningDay).ToList());
+            return View(db.Productions.Include(i => i.ProductionPhotos).OrderByDescending(i => i.Season).ThenBy(i => i.OpeningDay).ToList());
         }
 </code></pre>
 <pre><code>
