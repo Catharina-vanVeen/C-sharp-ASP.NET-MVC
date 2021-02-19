@@ -2,7 +2,7 @@
 
 Summary
 
-<h2>User Stories</h2>
+<h2>Features</h2>
 <ul>
   <li><a href="#7151">Asynchrounous Edit Button</a></li>
   <li><a href="#7646">Subscribe</a></li>
