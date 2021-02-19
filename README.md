@@ -7,7 +7,7 @@ Summary
   <li><a href="#7646">Subscribe</a></li>
   <li><a href="#7298">Add Production Photo Icon</a></li>
   <li><a href="#6612">Rotate Production Photos</a></li>
-  <li><a href="#2">XXX</a></li>
+  <li><a href="#7858">Unique Subscription Plan</a></li>
   <li><a href="#3">XXX</a></li>
   <li><a href="#4">XXX</a></li>
 </ul>
@@ -358,6 +358,56 @@ ___
 
 </code></pre>
 
+<h3 id="7858">Unique Subscription Plan</h3>
+<h4>Description</h4>
+<p>There is a method in the SubscriptionPlan controller that detects if a SubscriptionPlan is not unique (if one of the properties of the Plan match any of the other properties of any of the Plans in the database).  If a property is not unique, a Model error is added to the ModelState.  We also want to give the admin the ability to navigate to the SubscriptionPlan that conflicted with the Plan the we were trying to add or edit.  Add a details link at the end of each of the validation messages that appears on the page that take the User to the Details page of the SubscriptionPlan that already has that property value when the link is clicked.</p>
+<h4>Implementation</h4>
+<p>Update controller to include link ModelState errors. Combine error messages into ONE if pertaining to same existing plan.</p>
+<h4>Code</h4>
+<pre><code>
+        public void ComparePlans(SubscriptionPlan subscriptionPlan)
+        {
+            //Find similar plans in Database
+            var similarPlans = db.SubscriptionPlan.AsNoTracking().Where(p =>
+                p.SubscriptionLevel == subscriptionPlan.SubscriptionLevel ||
+                p.PricePerYear == subscriptionPlan.PricePerYear ||
+                p.NumberOfShows == subscriptionPlan.NumberOfShows).ToList();
+            //if there, remove plan that is being edited from similarPlans
+            similarPlans.RemoveAll(p => p.PlanId.Equals(subscriptionPlan.PlanId));
+
+            string SubscriptionLevel = subscriptionPlan.SubscriptionLevel;
+            decimal PricePerYear = subscriptionPlan.PricePerYear;
+            int NumberOfShows = subscriptionPlan.NumberOfShows;
+
+            foreach (var plan in similarPlans)
+            {
+                string ExistingSubscriptionLevel = plan.SubscriptionLevel;
+                decimal ExistingPricePerYear = plan.PricePerYear;
+                int ExistingNumberOfShows = plan.NumberOfShows;
+
+                string anchor = "<a href =\"/Subscribers/SubscriptionPlans/Details/" + plan.PlanId + "\" target=\"_blank\">plan.</a>";
+                string errorString = "There already is a plan";
+                //comparison of users input and specified attribute, check for equal
+                if (ExistingSubscriptionLevel.ToLower().Equals(SubscriptionLevel.ToLower()))
+                {
+                    errorString += " with the same level name";
+                }
+                //comparison of users input and specified attribute, check for equal
+                if (ExistingPricePerYear.Equals(PricePerYear))
+                {
+                    errorString += ", that offers a price/year of: $" + PricePerYear;
+                }
+                //comparison of users input and specified attribute, check for equal
+                if (ExistingNumberOfShows.Equals(NumberOfShows))
+                {
+                    errorString += ", that offers " + NumberOfShows + " tickets/year";
+                }
+                errorString += ". See " + anchor;
+                ModelState.AddModelError("SubscriptionPlan", errorString);
+            }
+</code></pre>
+
+
 <h3 id="1">XXX</h3>
 <h4>Description</h4>
 <p></p>
@@ -377,3 +427,4 @@ XXX
 <pre><code>
 XXX
 </code></pre>
+
