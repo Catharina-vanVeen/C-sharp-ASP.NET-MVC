@@ -762,7 +762,8 @@
 <p>Create subscribe view</p>
 <p>Create subscribe GET and POST methods. The POST method needs to update the UserRole linking table and the user table, since the role is currently logged in two distinct ways. (Submitted a improvement suggestion for this) The POST method needs to add teh subscriber to the subscriber table. Then the method needs to automatically log the user in again after saving to the database to update the login information and display the appropriate content for a subscriber. </p>
 <p>Update register method and view to allow for return url. Add extra parameter (return url) to register POST and GET methods. Modify the method to redirect to return url. Update Register view to pass return url to the controller.</p>
-![XXX](GitHub-images/7390.PNG?raw=true)
+
+![Subscribe](GitHub-images/7646.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
