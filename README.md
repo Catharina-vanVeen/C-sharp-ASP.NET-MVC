@@ -23,6 +23,7 @@
 <p>Html: Add edit button. Create Ajax forms outside table to avoid interference from table. Add hidden input fields and submit and cancel buttons. </p>
 <p>Javascript: Write script to appropriately show and hide edit fields and buttons. Write script to correctly handle result of Ajax call, hide elements and display message.</p>
 <p>Controller: Write POST method that validates changes, updates the database and returns the apporpriate JSON message.</p>
+
 ![XXX](GitHub-images/7390.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
@@ -1066,7 +1067,8 @@ ___
 <h4>Implementation</h4>
 <p>Create partial view for Admin Navigation Panel with bootstrap cards.</p>
 <p>Create JQuery to hide and show Admin Navigation Panel when buttons are clicked or when the area outside the panel is clicked.</p>
-![XXX](GitHub-images/7390.PNG?raw=true)
+
+![Admin Navigation Panel](GitHub-images/6598.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
