@@ -1,6 +1,6 @@
 # Vertigo Theater
 
-<p>I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) web application for a theater group. The website keeps track of productions, cast members, subscribers etc. I added features, either by modifying pre-existing code or writing new code.  I also made several suggestions for improving the database structure. I worked on back-end and front-end, using C#, JavaScript, JQuery, Ajax, HTML and CSS.</p>
+<p>I worked with a team of colleagues on developing a full-scale C# (ASP.NET MVC) web application for a theater group. The website keeps track of productions, cast members, subscribers etc. I added features, either by modifying pre-existing code or writing new code.  I also made several suggestions for improving the database structure. I worked on back-end and front-end, using C#, JavaScript, jQuery, Ajax, HTML and CSS.</p>
 
 <p>See below for description, code and images</p>
 
