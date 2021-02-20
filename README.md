@@ -6,12 +6,12 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
 <ul>
   <li><a href="#7151">Asynchrounous Edit Button</a></li>
   <li><a href="#7390">Direct Message Fans</a></li>
+  <li><a href="#6342">Mobile Calendar</a></li>
   <li><a href="#7646">Subscribe</a></li>
   <li><a href="#7298">Add Production Photo Icon</a></li>
   <li><a href="#6612">Rotate Production Photos</a></li>
   <li><a href="#6598">Admin Navigation Panel</a></li>
   <li><a href="#7858">Unique Subscription Plan</a></li>
-  <li><a href="#4">XXX</a></li>
 </ul>
 
 <h3 id="7151">Asynchrounous Edit Button</h3>
@@ -57,7 +57,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                 @{String CloseButtonShowtimeEve = item.ProductionId + "-ShowtimeEveCloseBtn";}
                 @{String ValueShowtimeEve = item.ProductionId + "-ShowtimeEveValue";}
 
-
                 @if (User.IsInRole("Admin"))
                 {
                     using (Ajax.BeginForm("PartialEdit", "Productions", null, new AjaxOptions { HttpMethod = "POST", OnSuccess = "success", OnFailure = "success" }, new { @id = @FormOpeningDay })) { @Html.AntiForgeryToken() }
@@ -91,7 +90,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                                 <input type="hidden" form="@FormOpeningDay" id="CloseButton" name="CloseButton" value="@CloseButtonOpeningDay">
                                 <input type="hidden" form="@FormOpeningDay" id="ValueSpan" name="ValueSpan" value="@ValueOpeningDay">
                             }
-
                         </td>
 
                         @if (User.IsInRole("Admin"))
@@ -101,10 +99,7 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                                 <button type="submit" form="@FormOpeningDay" class="edit-btn-set edit-functionality" id="@CheckButtonOpeningDay"><i class="far fa-check-square"></i></button>
                                 <button type="button" class="edit-btn-set edit-functionality" id="@CloseButtonOpeningDay" onclick="hide_edit_functions('@FieldOpeningDay', '@CheckButtonOpeningDay', '@CloseButtonOpeningDay', '@EditButtonOpeningDay', '@FieldOpeningDayMessage', '@ValueOpeningDay')"><i class="far fa-window-close"></i></button>
                             </td>
-
                         }
-
-
                     </tr>
                     <tr class="production-index-tr-styling">
                         <th class="productions-index-th-styling">
@@ -115,7 +110,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                             @Html.EditorFor(model => item.ClosingDay, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "ClosingDay", @form = @FormClosingDay, @id = @FieldClosingDay } })
                             @if (User.IsInRole("Admin"))
                             {
-
                                 <span id="@FieldClosingDayMessage"></span>
 
                                 @*Fields necessary for controller to work*@
@@ -140,7 +134,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                                 <button type="button" class="edit-btn-set edit-functionality" id="@CloseButtonClosingDay" onclick="hide_edit_functions('@FieldClosingDay', '@CheckButtonClosingDay', '@CloseButtonClosingDay', '@EditButtonClosingDay', '@FieldClosingDayMessage', '@ValueClosingDay')"><i class="far fa-window-close"></i></button>
                             </td>
                         }
-
                     </tr>
 
                     @if (item.ShowtimeMat.HasValue || User.IsInRole("Admin"))
@@ -180,8 +173,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                                     <button type="button" class="edit-btn-set edit-functionality" id="@CloseButtonShowtimeMat" onclick="hide_edit_functions('@FieldShowtimeMat', '@CheckButtonShowtimeMat', '@CloseButtonShowtimeMat', '@EditButtonShowtimeMat', '@FieldShowtimeMatMessage', '@ValueShowtimeMat')"><i class="far fa-window-close"></i></button>
                                 </td>
                             }
-                            
-
                         </tr>
                     }
 
@@ -211,7 +202,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                                     <input type="hidden" form="@FormShowtimeEve" id="CloseButton" name="CloseButton" value="@CloseButtonShowtimeEve">
                                     <input type="hidden" form="@FormShowtimeEve" id="ValueSpan" name="ValueSpan" value="@ValueShowtimeEve">
                                 }
-
                             </td>
 
                             @if (User.IsInRole("Admin"))
@@ -221,14 +211,10 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                                     <button type="submit" form="@FormShowtimeEve" class="edit-btn-set edit-functionality" id="@CheckButtonShowtimeEve"><i class="far fa-check-square"></i></button>
                                     <button type="button" class="edit-btn-set edit-functionality" id="@CloseButtonShowtimeEve" onclick="hide_edit_functions('@FieldShowtimeEve', '@CheckButtonShowtimeEve', '@CloseButtonShowtimeEve', '@EditButtonShowtimeEve', '@FieldShowtimeEveMessage', '@ValueShowtimeEve')"><i class="far fa-window-close"></i></button>
                                 </td>
-
                             }
-                            
-
                         </tr>
                     }
                 </table>
-
 </code></pre>
 <pre><code>
 
@@ -264,7 +250,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
             document.getElementById(FieldOpeningDayMessage).innerHTML = "";
             document.getElementById(ValueOpeningDay).style.display = "inline";
         }
-
 </code></pre>
 <pre><code>
 
@@ -352,10 +337,7 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
             }
             return Json(new { Success = false, Message = "There was an error", MessageField = Request.Form["MessageField"] });
         }
-
-
 </code></pre>
-
 
 <h3 id="7390">Direct Message Fans</h3>
 <h4>Description</h4>
@@ -390,7 +372,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                     </tr>
                 }
             }
-
         </table>
 </code></pre>
 <pre><code>
@@ -425,7 +406,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
     function AjaxFailure() {
         $(".modal-body #messageModalText").text("On Failure was called. There was an error sending the messages. Please try again.");
     }
-
 </code></pre>
 <pre><code>
 
@@ -443,7 +423,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
         public DateTime Sent { get; set; }
         public bool Read { get; set; }
     }
-
 </code></pre>
 <pre><code>
 
@@ -455,12 +434,10 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
         public virtual MessageGroup MessageGroup { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
     }
-
 </code></pre>
-
 <pre><code>
     
-        public class MessageGroup
+    public class MessageGroup
     {
         //using data annotations to change the display name of this property.
         [Display(Name = "Group Name")]
@@ -477,9 +454,7 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
         public int UserLimit { get; set; }
         public ICollection<MessageGroupUser> MessageGroupUsers { get; set; }
     }
-
 </code></pre>
-
 <pre><code>
 
         //Send messages to all users who have favorited a castmember in the production.
@@ -524,9 +499,7 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                         messageGroup = messageGroupUser.MessageGroup;
                     }
                 }
-
-
-                
+              
                 //If no existingMessageGroup was found with only the Admin and the userToMessage, Create new MessageGroup.
                 if (messageGroup == null)
                 {
@@ -576,7 +549,198 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
 
             return Json(new { Success = true });
         }
+</code></pre>
 
+<h3 id="6342">Mobile Calendar</h3>
+<h4>Description</h4>
+<p>The calendar of events displays well in a full sized screen on a laptop, computer, or tablet. On a mobile phone, the calendar still displays correctly, but it looks very crammed.</p>
+<p>We would like the events to be displayed as a list consisting events for the  current week rather than as a calendar in mobile view. You will need to find a way to obtain and display the dates of the current week. You will then need to pull data from the CalendarEvents table to display the events of the week using razor syntax.</p>
+<h4>Implementation</h4>
+<p></p>
+<p></p>
+<p></p>
+<h5><a href="#features">Back to Features</a></h5>
+<h4>Code</h4>
+<pre><code>
+
+    var events = @Html.Raw(JsonConvert.SerializeObject(ViewData["Events"]));
+    var weekOffset = 0;
+    $(document).ready(function () {
+        GenerateCalendar(events);
+        weekOffset = 0;
+        GenerateWeekCalendar(events, weekOffset);
+        });
+    function GenerateWeekCalendar(events, offset) {
+        var range = CalculateWeekRange(offset);
+        setCalendarHeading(range);
+        startOfWeek = range[0].setHours(0, 0, 0, 0);
+        endOfWeek = range[1].setHours(0, 0, 0, 0);
+        for (let event of events) {
+            //THIS IF STATEMENT WORKS ONLY IF EVENTS ARE NOT MULTIPLE DAYS.
+            if (GetDateTime(event.start).setHours(0, 0, 0, 0) >= startOfWeek && GetDateTime(event.start).setHours(0, 0, 0, 0) < endOfWeek) {
+                CreateEvent(event);
+            }
+        }
+
+        //this function calculates the begin and end date of the calendar to be displayed
+        function CalculateWeekRange(offset) {
+            //temporarily set start and end of week to today.
+            var startOfWeek = new Date();
+            var endOfWeek = new Date();
+            var dayOfweek = startOfWeek.getDay();
+            startOfWeek.setDate(startOfWeek.getDate() - dayOfweek + (7 * offset));
+            endOfWeek.setDate(endOfWeek.getDate() - dayOfweek + 7 + (7 * offset));
+            return [startOfWeek, endOfWeek];
+        }
+
+        //this function build the string for the calendar heading based on the range of dates.
+        function setCalendarHeading(range) {
+            if (range[0].getMonth() == range[1].getMonth()) {
+                headingString = `${range[0].toLocaleString('default', { month: 'long' })} ${range[0].toLocaleString('default', { year: 'numeric' })}`;
+            }
+            else if (range[0].getYear() == range[1].getYear()) {
+                headingString = `${range[0].toLocaleString('default', { month: 'short' })} - ${range[1].toLocaleString('default', { month: 'short' })}, ${range[0].toLocaleString('default', { year: 'numeric' })}`;
+            }
+            else {
+                headingString = `${range[0].toLocaleString('default', { month: 'short' })} ${range[0].toLocaleString('default', { year: '2-digit' })} - ${range[1].toLocaleString('default', { month: 'short' })} ${range[1].toLocaleString('default', { year: '2-digit' })}`;
+            }
+            document.getElementById("MobileEventsCalendarHeading").innerHTML = headingString;
+        }
+
+        //This generates the html code for the mobile EventsCalendar
+        function CreateEvent(item) {
+            let text = "";
+            let row = document.createElement('div');
+            row.className = 'row';
+            let leftCol = document.createElement('div');
+            leftCol.className = 'col-dateCards';
+            let card = document.createElement('div');
+            card.className = 'card';
+            card.style.backgroundColor = item.color || '#ffffff';
+            card.style.color = BlackOrWhiteContrast(item.color || '#ffffff');
+            let cardBody = document.createElement('div');
+            cardBody.className = 'card-body';
+            let cardTitle = document.createElement('h4');
+            //cardTitle.className = 'row';
+            text = document.createTextNode(GetDayOfMonth(item.start));
+            cardTitle.appendChild(text);
+            let cardText = document.createElement('p');
+            cardText.className = 'card-text';
+            text = document.createTextNode(GetDayOfWeekShort(item.start));
+            cardText.appendChild(text);
+            let rightCol = document.createElement('div');
+            rightCol.className = 'col';
+            let heading = document.createElement('h4');
+            //heading.className = 'row';
+            text = document.createTextNode(item.title);
+            heading.appendChild(text);
+            let spanDate = document.createElement('span');
+            //spanDate.className = 'row';
+            text = document.createTextNode(GetDate(item.start));
+            spanDate.appendChild(text);
+            let spanTime = document.createElement('span');
+            //spanTime.className = 'row';
+            text = document.createTextNode(GetTime(item.start) + " - " + GetTime(item.end));
+            spanTime.appendChild(text);
+            let spanTickets = document.createElement('span');
+            //spanTickets.className = 'row';
+            text = document.createTextNode('Tickets available: ' + item.seats);
+            spanTickets.appendChild(text);
+            let br1 = document.createElement('br');
+            let br2 = document.createElement('br');
+            let br3 = document.createElement('br');
+            let br4 = document.createElement('br');
+
+            cardBody.appendChild(cardTitle);
+            cardBody.appendChild(cardText);
+            card.appendChild(cardBody);
+            leftCol.appendChild(card);
+            row.appendChild(leftCol);
+            rightCol.appendChild(heading);
+            rightCol.appendChild(spanDate);
+            rightCol.appendChild(br1);
+            rightCol.appendChild(spanTime);
+            rightCol.appendChild(br2);
+            rightCol.appendChild(spanTickets);
+            row.appendChild(rightCol);
+            document.getElementById("mobile-calendar-container").appendChild(row)
+        }
+    }
+
+    function previousWeek() {
+        weekOffset -= 1;
+        document.getElementById("mobile-calendar-container").innerHTML = "";
+        setThisWeekBtn()
+        GenerateWeekCalendar(events, weekOffset);
+    }
+
+    function nextWeek() {
+        weekOffset += 1;
+        document.getElementById("mobile-calendar-container").innerHTML = "";
+        setThisWeekBtn()
+        GenerateWeekCalendar(events, weekOffset);
+    }
+
+    function thisWeek() {
+        weekOffset = 0;
+        document.getElementById("mobile-calendar-container").innerHTML = "";
+        setThisWeekBtn()
+        GenerateWeekCalendar(events, weekOffset);
+    }
+
+    function setThisWeekBtn() {
+        if (weekOffset == 0) {
+            document.getElementById("thisWeek").classList.add("fc-state-disabled");
+            document.getElementById("thisWeek").disabled = true;
+        }
+        else {
+            document.getElementById("thisWeek").classList.remove("fc-state-disabled");
+            document.getElementById("thisWeek").disabled = false;
+        }
+    }
+</code></pre>
+<pre><code>
+
+    //function converts a hex color or hex shorthand color into r,g, b
+    function hexToRgb(hex) {
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+            return r + r + g + g + b + b;
+        });
+        
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
+
+    //this function calculates the luminance of an color. It takes thre values, r g and b
+    // from http://www.w3.org/TR/WCAG20/#relativeluminancedef
+    function relativeLuminanceW3C(R8bit, G8bit, B8bit) {
+
+        var RsRGB = R8bit / 255;
+        var GsRGB = G8bit / 255;
+        var BsRGB = B8bit / 255;
+
+        var R = (RsRGB <= 0.03928) ? RsRGB / 12.92 : Math.pow((RsRGB + 0.055) / 1.055, 2.4);
+        var G = (GsRGB <= 0.03928) ? GsRGB / 12.92 : Math.pow((GsRGB + 0.055) / 1.055, 2.4);
+        var B = (BsRGB <= 0.03928) ? BsRGB / 12.92 : Math.pow((BsRGB + 0.055) / 1.055, 2.4);
+
+        // For the sRGB colorspace, the relative luminance of a color is defined as: 
+        var L = 0.2126 * R + 0.7152 * G + 0.0722 * B;
+
+        return L;
+    }
+
+    //This function tells you to use black or white text color to contrast with the background color in hex.
+    function BlackOrWhiteContrast(hex) {
+        colorArray = hexToRgb(hex);
+        luminance = relativeLuminanceW3C(colorArray.r, colorArray.g, colorArray.b) 
+        return (luminance > 0.179) ? '#000000' : '#ffffff';
+    }
 </code></pre>
 
 <h3 id="7646">Subscribe</h3>
@@ -592,9 +756,8 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
-     @model TheatreCMS.Areas.Subscribers.Models.Subscriber
-
-
+    
+    @model TheatreCMS.Areas.Subscribers.Models.Subscriber
     @{
         ViewBag.Title = "Subscribe";
     }
@@ -604,7 +767,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
 
     @if (User == null || !User.Identity.IsAuthenticated)
     {
-
         <p class="text-center">We offer the following subscription plans:</p>
 
         foreach (var plan in ViewBag.SubscriptionPlans)
@@ -621,25 +783,19 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
             @Html.ActionLink("Register", "Register", new { area = "", controller = "Account", returnUrl = "/Home/Subscribe" }, htmlAttributes: new { @class = "btn btn-main registerButton w-25 mb-5", @role = "button" })
             @Html.ActionLink("Login", "Login", new { area = "", controller = "Account", returnUrl = "/Home/Subscribe" }, htmlAttributes: new { @class = "btn btn-main registerButton w-25 mb-5", @role = "button" })
         </div>
-
       }
 
     else if (User.Identity.IsAuthenticated && User.IsInRole("Subscriber"))
     {
         < p > You are already registered as a subscriber </ p >
     }
-
     else if (User.Identity.IsAuthenticated && User.IsInRole("User"))
     {
-
         using (Html.BeginForm("SubscribeAsync", "Home", null, FormMethod.Post))
         {
             @Html.AntiForgeryToken()
-
             <div class="form-horizontal ">
-
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
                 <p class="text-center">Please select one of the following subscription plans:</p>
                 <div class="form-group">
 
@@ -653,7 +809,6 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
                             <p>@plan.NumberOfShows tickets for $@plan.PricePerYear per year </p>
                         </div>
                     }
-
                 </div>
 
                 <div class="form-group text-center">
@@ -675,26 +830,14 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
             </div>
         }
     }
-
-
-
-    @section Scripts
-    {
-        @Scripts.Render("~/bundles/jqueryval")
-    }
-
-
-
 </code></pre>
 <pre><code>
+
         public ActionResult Subscribe()
         {
-
-            ViewBag.SubscriptionPlans = db.SubscriptionPlan.OrderByDescending(p =&gt p.NumberOfShows ).ToList();
-
+            ViewBag.SubscriptionPlans = db.SubscriptionPlan.OrderByDescending(p => p.NumberOfShows ).ToList();
             return View();
         }
-
 
         // POST: Subscribe
         [HttpPost]
@@ -735,15 +878,12 @@ I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) w
             ViewBag.SubscriptionPlans = db.SubscriptionPlan.OrderByDescending(p =&gt p.NumberOfShows ).ToList();
             return View("Subscribe");
         }
-
 </code></pre>
-
 
 <h3 id="7298">Add Production Photo Icon</h3>
 <h4>Description</h4>
 <p>We want to easily add production photos to productions in the ProductionPhotos index page.  To accomplish this, we want to display all productions on that page (not just productions with associated photos like it is now.  If there is a Production with no ProductionPhotos, that section will not appear on the ProductionPhotos Index page). Then we want to have a plus sign icon (using font awesome) associated with it, that will link to the ProductionPhotos/Create/[id] page for that particular production. When hovered over, that icon should display a message saying "Click to add a photo to this production".</p>
 <p>The Productions with ProductionPhotos should also have the icon.  If there are no associated photos, put it to the right of the title.  The icon should display to the right of the last picture for each production if the Production does have photos.</p>
-
 <h4>Implementation</h4>
 <p>Change ProductionPhotosController to pass all Productions (including ProductionPhotos) instead of just the ProductionPhotos.
 Edit index.cshtml to reflect the change in controller. Now the page displays Productions for which there are no photos.</p>
@@ -752,9 +892,6 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
-    public class ProductionPhotosController : Controller
-    {
-        private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: ProductionPhotos
         public ActionResult Index()
@@ -855,21 +992,11 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
     };
 </code></pre>
 
-
-
-
-
-
-
 <h3 id="6612">Rotate Production Photos</h3>
-
 <h4>Description</h4>
 <p>Right now, the Admin cannot specifically choose what Production Photo gets shown for each Production; The Production Photos are rotated in a carousel.  We want to give the Admin the ability to set what Production Photo gets shown on the Home Page for each Production but also keep the previous implementation of showing random Production Photos.  Create a new Boolean field in the Production Model called RotateProductionPhotos.  If this field is True and the Production is currently showing (on the homepage), the carousel for that Production on the homepage should behave like normal.  If the field is false, only display the DefaultPhoto for that Production; the carousel should not rotate between ProductionPhotos.</p>
-
 <p>Add a check box on the Create and Edit page to allow the Admin to change the RotateProductionPhotos property.  Ensure that that property correctly saves to the Production when a Production is saved or edited.</p>
-
 <p>Show new property only to Admins on Details and Index pages.</p>
-
 <h4>Implementation</h4>
 <p>I added the property RotateProductionPhotos to the model.</p>
 <p>I modified the controller to pass only the default ProductionPhoto for the view to use if RotateProductionPhotos was false, and all ProductionPhotos if RotateProductionPhotos is true. No edits were therefor needed in the carousel, because the controller controls the number of pictures.</p>
@@ -893,7 +1020,6 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
                 }
                 productionPhotosList.Add(ShufflePhotos(photoArray));
             }
-
 </code></pre>
 <pre><code>
                     @if (User.IsInRole("Admin"))
@@ -905,7 +1031,6 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
                             @Html.DisplayFor(model =&gt model.RotateProductionPhotos)
                         &lt/dd&gt
                     }
-
 </code></pre>
 ___
 <pre><code>
@@ -921,9 +1046,7 @@ ___
                         &ltspan class="badge badge-pill badge-secondary"&gtDo Not Rotate Images&lt/span&gt
                     }
                 }
-
 </code></pre>
-
 
 <h3 id="6598">Admin Navigation Panel</h3>
 <h4>Description</h4>
@@ -934,11 +1057,12 @@ ___
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
+
+
     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
     {
         <script>
-
-            /* function to make the navbar disappear when right chevron is clicked */
+        /* function to make the navbar disappear when right chevron is clicked */
             function disappear_admin_navbar() {
 
                 document.getElementById("admin_navbar_button").style.display = 'block';
@@ -947,7 +1071,6 @@ ___
 
             /*this function brings back the nav bar when the button is clicked.*/
             function appear_admin_navbar() {
-
                 document.getElementById("admin_navbar_button").style.display = 'none';
                 $("#admin_navbar_container").animate({right: 0}, "slow");
             }
@@ -961,7 +1084,6 @@ ___
                     }
                 }
             });
-
         </script>
 
         <div class="admin_navbar_button admin_navbar" id="admin_navbar_button">
@@ -997,9 +1119,7 @@ ___
             </div>
         </div>
     }
-
 </code></pre>
-
 
 <h3 id="7858">Unique Subscription Plan</h3>
 <h4>Description</h4>
@@ -1009,6 +1129,8 @@ ___
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
+
+
         public void ComparePlans(SubscriptionPlan subscriptionPlan)
         {
             //Find similar plans in Database
@@ -1018,7 +1140,7 @@ ___
                 p.NumberOfShows == subscriptionPlan.NumberOfShows).ToList();
             //if there, remove plan that is being edited from similarPlans
             similarPlans.RemoveAll(p => p.PlanId.Equals(subscriptionPlan.PlanId));
-
+            
             string SubscriptionLevel = subscriptionPlan.SubscriptionLevel;
             decimal PricePerYear = subscriptionPlan.PricePerYear;
             int NumberOfShows = subscriptionPlan.NumberOfShows;
@@ -1050,26 +1172,3 @@ ___
                 ModelState.AddModelError("SubscriptionPlan", errorString);
             }
 </code></pre>
-
-
-<h3 id="1">XXX</h3>
-<h4>Description</h4>
-<p></p>
-<p></p>
-<p></p>
-<h4>Implementation</h4>
-<p></p>
-<p></p>
-<p></p>
-<h5><a href="#features">Back to Features</a></h5>
-<h4>Code</h4>
-<pre><code>
-XXX
-</code></pre>
-<pre><code>
-XXX
-</code></pre>
-<pre><code>
-XXX
-</code></pre>
-
