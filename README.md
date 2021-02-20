@@ -24,7 +24,7 @@
 <p>Javascript: Write script to appropriately show and hide edit fields and buttons. Write script to correctly handle result of Ajax call, hide elements and display message.</p>
 <p>Controller: Write POST method that validates changes, updates the database and returns the apporpriate JSON message.</p>
 
-![XXX](GitHub-images/7390.PNG?raw=true)
+![Asynchrounous Edit Button](GitHub-images/7151.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
@@ -900,7 +900,8 @@
 Edit index.cshtml to reflect the change in controller. Now the page displays Productions for which there are no photos.</p>
 <p>Add 'Add Production Photo'-button to each photo in the view. </p>
 <p>Edit the JQuery search function so that the 'Add Production Photo' button is displayed with the last photo only and if there are no photos, then the plus icon is displayed with the productions title.</p>
-![XXX](GitHub-images/7390.PNG?raw=true)
+
+![Add Production Photo](GitHub-images/7298.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
@@ -1013,7 +1014,8 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
 <p>I added the property RotateProductionPhotos to the model.</p>
 <p>I modified the controller to pass only the default ProductionPhoto for the view to use if RotateProductionPhotos was false, and all ProductionPhotos if RotateProductionPhotos is true. No edits were therefor needed in the carousel, because the controller controls the number of pictures.</p>
 <p>I modified the view to show the edit RotateProductionPhotos and to show the RotateProductionPhotos pill badge to admins only.</p>
-![XXX](GitHub-images/7390.PNG?raw=true)
+
+![Rotate Production Photos](GitHub-images/6612.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
