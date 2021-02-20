@@ -1068,7 +1068,7 @@ ___
 <p>Create partial view for Admin Navigation Panel with bootstrap cards.</p>
 <p>Create JQuery to hide and show Admin Navigation Panel when buttons are clicked or when the area outside the panel is clicked.</p>
 
-![Admin Navigation Panel](GitHub-images/6598.PNG?raw=true)
+![Admin Navigation Panel](GitHub-images/6598.png?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
