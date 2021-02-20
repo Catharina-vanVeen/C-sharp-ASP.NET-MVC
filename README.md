@@ -1,5 +1,6 @@
 # Vertigo Theater
 
+![XXX](GitHub-images/7390.PNG?raw=true)
 <p>I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) web application for a theater group. The website keeps track of productions, cast members, subscribers etc. I added features, either by modifying pre-existing code or writing new code.  I also made several suggestions for improving the database structure. I worked on back-end and front-end, using C#, JavaScript, JQuery, Ajax, HTML and CSS.</p>
 
 <p>See below for description, code and images</p>
@@ -564,6 +565,9 @@
 <p></p>
 <p></p>
 <p></p>
+
+![Mobile Calendar](GitHub-images/6342.PNG?raw=true)
+
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
