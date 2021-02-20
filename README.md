@@ -351,7 +351,9 @@
 <p></p>
 <p></p>
 <p></p>
-[![Direct Message Fans](GitHub-images/7390.PNG?raw=true)]
+
+![Direct Message Fans](GitHub-images/7390.PNG?raw=true)
+
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
