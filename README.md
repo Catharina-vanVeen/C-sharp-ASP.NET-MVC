@@ -1,6 +1,5 @@
 # Vertigo Theater
 
-![XXX](GitHub-images/7390.PNG?raw=true)
 <p>I worked with a team of colleagues on developing a full scale C# (ASP.NET MVC) web application for a theater group. The website keeps track of productions, cast members, subscribers etc. I added features, either by modifying pre-existing code or writing new code.  I also made several suggestions for improving the database structure. I worked on back-end and front-end, using C#, JavaScript, JQuery, Ajax, HTML and CSS.</p>
 
 <p>See below for description, code and images</p>
@@ -24,6 +23,7 @@
 <p>Html: Add edit button. Create Ajax forms outside table to avoid interference from table. Add hidden input fields and submit and cancel buttons. </p>
 <p>Javascript: Write script to appropriately show and hide edit fields and buttons. Write script to correctly handle result of Ajax call, hide elements and display message.</p>
 <p>Controller: Write POST method that validates changes, updates the database and returns the apporpriate JSON message.</p>
+![XXX](GitHub-images/7390.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
@@ -762,6 +762,7 @@
 <p>Create subscribe view</p>
 <p>Create subscribe GET and POST methods. The POST method needs to update the UserRole linking table and the user table, since the role is currently logged in two distinct ways. (Submitted a improvement suggestion for this) The POST method needs to add teh subscriber to the subscriber table. Then the method needs to automatically log the user in again after saving to the database to update the login information and display the appropriate content for a subscriber. </p>
 <p>Update register method and view to allow for return url. Add extra parameter (return url) to register POST and GET methods. Modify the method to redirect to return url. Update Register view to pass return url to the controller.</p>
+![XXX](GitHub-images/7390.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
@@ -898,6 +899,7 @@
 Edit index.cshtml to reflect the change in controller. Now the page displays Productions for which there are no photos.</p>
 <p>Add 'Add Production Photo'-button to each photo in the view. </p>
 <p>Edit the JQuery search function so that the 'Add Production Photo' button is displayed with the last photo only and if there are no photos, then the plus icon is displayed with the productions title.</p>
+![XXX](GitHub-images/7390.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
@@ -1010,6 +1012,7 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
 <p>I added the property RotateProductionPhotos to the model.</p>
 <p>I modified the controller to pass only the default ProductionPhoto for the view to use if RotateProductionPhotos was false, and all ProductionPhotos if RotateProductionPhotos is true. No edits were therefor needed in the carousel, because the controller controls the number of pictures.</p>
 <p>I modified the view to show the edit RotateProductionPhotos and to show the RotateProductionPhotos pill badge to admins only.</p>
+![XXX](GitHub-images/7390.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
@@ -1063,6 +1066,7 @@ ___
 <h4>Implementation</h4>
 <p>Create partial view for Admin Navigation Panel with bootstrap cards.</p>
 <p>Create JQuery to hide and show Admin Navigation Panel when buttons are clicked or when the area outside the panel is clicked.</p>
+![XXX](GitHub-images/7390.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
@@ -1134,6 +1138,7 @@ ___
 <p>There is a method in the SubscriptionPlan controller that detects if a SubscriptionPlan is not unique (if one of the properties of the Plan match any of the other properties of any of the Plans in the database).  If a property is not unique, a Model error is added to the ModelState.  We also want to give the admin the ability to navigate to the SubscriptionPlan that conflicted with the Plan the we were trying to add or edit.  Add a details link at the end of each of the validation messages that appears on the page that take the User to the Details page of the SubscriptionPlan that already has that property value when the link is clicked.</p>
 <h4>Implementation</h4>
 <p>Update controller to include link ModelState errors. Combine error messages into ONE if pertaining to same existing plan.</p>
+![XXX](GitHub-images/7390.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
 <h4>Code</h4>
 <pre><code>
