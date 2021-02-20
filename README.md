@@ -1058,7 +1058,6 @@ ___
 <h4>Code</h4>
 <pre><code>
 
-
     @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
     {
         <script>
