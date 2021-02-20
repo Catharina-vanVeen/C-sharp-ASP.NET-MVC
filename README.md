@@ -1011,9 +1011,9 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
 <p>Add a check box on the Create and Edit page to allow the Admin to change the RotateProductionPhotos property.  Ensure that that property correctly saves to the Production when a Production is saved or edited.</p>
 <p>Show new property only to Admins on Details and Index pages.</p>
 <h4>Implementation</h4>
-<p>I added the property RotateProductionPhotos to the model.</p>
-<p>I modified the controller to pass only the default ProductionPhoto for the view to use if RotateProductionPhotos was false, and all ProductionPhotos if RotateProductionPhotos is true. No edits were therefor needed in the carousel, because the controller controls the number of pictures.</p>
-<p>I modified the view to show the edit RotateProductionPhotos and to show the RotateProductionPhotos pill badge to admins only.</p>
+<p>Add the property RotateProductionPhotos to the model.</p>
+<p>Modify the controller to pass only the default ProductionPhoto for the view to use if RotateProductionPhotos was false, and all ProductionPhotos if RotateProductionPhotos is true. No edits were therefor needed in the carousel, because the controller controls the number of pictures.</p>
+<p>Modify the view to show the edit RotateProductionPhotos and to show the RotateProductionPhotos pill badge to admins only.</p>
 
 ![Rotate Production Photos](GitHub-images/6612.PNG?raw=true)
 <h5><a href="#features">Back to Features</a></h5>
