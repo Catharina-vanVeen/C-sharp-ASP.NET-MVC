@@ -146,7 +146,7 @@
                                 @Html.DisplayNameFor(model => model.ShowtimeMat)
                             </th>
                             <td class="productions-index-td-styling">
-                                <span id="@ValueShowtimeMat">@item.ShowtimeMat.GetValueOrDefault().ToShortTimeString()<br /></span>
+                                <span id="@ValueShowtimeMat">@if (item.ShowtimeMat.HasValue){@item.ShowtimeMat.GetValueOrDefault().ToShortTimeString() }<br /></span>
                                 @Html.EditorFor(model => item.ShowtimeMat, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "ShowtimeMat", @form = @FormShowtimeMat, @id = @FieldShowtimeMat } })
 
                                 @if (User.IsInRole("Admin"))
@@ -186,7 +186,7 @@
                                 @Html.DisplayNameFor(model => model.ShowtimeEve)
                             </th>
                             <td class="productions-index-td-styling">
-                                <span id="@ValueShowtimeEve">@item.ShowtimeEve.GetValueOrDefault().ToShortTimeString()</span>
+                                <span id="@ValueShowtimeEve">@if (item.ShowtimeEve.HasValue){@item.ShowtimeEve.GetValueOrDefault().ToShortTimeString()}<br /></span>
                                 @Html.EditorFor(model => item.ShowtimeEve, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "ShowtimeEve", @form = @FormShowtimeEve, @id = @FieldShowtimeEve } })
 
                                 @if (User.IsInRole("Admin"))
@@ -310,7 +310,10 @@
                 db.Productions.Attach(production);
                 db.Entry(production).Property(x => x.ShowtimeMat).IsModified = true;
                 //Variable for return json
-                newValue = production.ShowtimeMat.GetValueOrDefault().ToShortTimeString();
+                if (ShowtimeMat != null && ShowtimeMat != "")
+                {
+                    newValue = production.ShowtimeMat.GetValueOrDefault().ToShortTimeString();
+                }
             }
             else if (propertyName == "ShowtimeEve")
             {
@@ -323,7 +326,10 @@
                 db.Productions.Attach(production);
                 db.Entry(production).Property(x => x.ShowtimeEve).IsModified = true;
                 //Variable for return json
-                newValue = production.ShowtimeEve.GetValueOrDefault().ToShortTimeString();
+                if (ShowtimeEve != null && ShowtimeEve != "")
+                {
+                    newValue = production.ShowtimeEve.GetValueOrDefault().ToShortTimeString();
+                }
             }
             db.Entry(production).Property(x => x.Title).IsModified = false;
 
