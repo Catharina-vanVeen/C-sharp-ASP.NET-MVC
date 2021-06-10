@@ -146,7 +146,10 @@
                                 @Html.DisplayNameFor(model => model.ShowtimeMat)
                             </th>
                             <td class="productions-index-td-styling">
-                                <span id="@ValueShowtimeMat">@item.ShowtimeMat.GetValueOrDefault().ToShortTimeString()<br /></span>
+                                @if (item.ShowtimeMat.HasValue)
+                                {
+                                    <span id="@ValueShowtimeMat">@item.ShowtimeMat.GetValueOrDefault().ToShortTimeString()<br /></span>
+                                }
                                 @Html.EditorFor(model => item.ShowtimeMat, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "ShowtimeMat", @form = @FormShowtimeMat, @id = @FieldShowtimeMat } })
 
                                 @if (User.IsInRole("Admin"))
@@ -186,7 +189,10 @@
                                 @Html.DisplayNameFor(model => model.ShowtimeEve)
                             </th>
                             <td class="productions-index-td-styling">
-                                <span id="@ValueShowtimeEve">@item.ShowtimeEve.GetValueOrDefault().ToShortTimeString()</span>
+                                @if (item.ShowtimeEve.HasValue)
+                                {
+                                    <span id="@ValueShowtimeEve">@item.ShowtimeEve.GetValueOrDefault().ToShortTimeString()</span>
+                                }
                                 @Html.EditorFor(model => item.ShowtimeEve, new { htmlAttributes = new { @class = "form-control edit-functionality", @Name = "ShowtimeEve", @form = @FormShowtimeEve, @id = @FieldShowtimeEve } })
 
                                 @if (User.IsInRole("Admin"))
