@@ -1018,7 +1018,7 @@ Edit index.cshtml to reflect the change in controller. Now the page displays Pro
 <p>Show new property only to Admins on Details and Index pages.</p>
 <h4>Implementation</h4>
 <p>Add the property RotateProductionPhotos to the model.</p>
-<p>Modify the controller to pass only the default ProductionPhoto for the view to use if RotateProductionPhotos was false, and all ProductionPhotos if RotateProductionPhotos is true. No edits were therefor needed in the carousel, because the controller controls the number of pictures.</p>
+<p>Modify the controller to pass only the default ProductionPhoto for the view to use if RotateProductionPhotos was false, and all ProductionPhotos if RotateProductionPhotos is true. No edits were therefor needed in the carousel, because the controller controls the number of pictures, other than removing the carousel controls if there is only one image.</p>
 <p>Modify the view to show the edit RotateProductionPhotos and to show the RotateProductionPhotos pill badge to admins only.</p>
 
 ![Rotate Production Photos](GitHub-images/6612.PNG?raw=true)
